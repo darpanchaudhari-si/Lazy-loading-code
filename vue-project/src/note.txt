@@ -1,0 +1,158 @@
+<template>
+  <div>
+    <h1>hello</h1>
+    <h1>Hello</h1>
+    <h1>hello</h1>
+    <h1>Hello</h1>
+    <h1>hello</h1>
+    <h1>Hello</h1>
+    <h1>hello</h1>
+    <h1>Hello</h1>
+    <h1>hello</h1>
+    <h1>Hello</h1>
+    <h1>hello</h1>
+    <h1>Hello</h1>
+    <h1>hello</h1>
+    <h1>Hello</h1>
+    <h1>hello</h1>
+    <h1>Hello</h1>
+    <h1>hello</h1>
+    <h1>Hello</h1>
+    
+    <img
+      v-for="(image, index) in images"
+      :key="index"
+      :data-src="image.src"
+      :alt="image.alt"
+      loading="lazy"
+      ref="lazyImages"
+    />
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      images: [
+        {
+          src: 'https://img.freepik.com/free-photo/beautiful-scenery-summit-mount-everest-covered-with-snow-white-clouds_181624-21317.jpg?size=626&ext=jpg&234',
+          alt: 'Image 1',
+        },
+        {
+          src: 'https://img.freepik.com/free-photo/flag-india_1401-132.jpg?size=626&ext=jpg',
+          alt: 'Image 2',
+        },
+        {
+          src: 'https://img.freepik.com/free-vector/realistic-set-colorful-powder-clouds-explosions-isolated-transparent-background_1441-2628.jpg?size=626&ext=jpg',
+          alt: 'Image 3',
+        },
+        {
+          src: 'https://img.freepik.com/free-photo/flag-india_1401-132.jpg?size=626&ext=jpg',
+          alt: 'Image 4',
+        },
+        {
+          src: 'https://img.freepik.com/free-photo/flag-india_1401-132.jpg?size=626&ext=jpg',
+          alt: 'Image 5',
+        }
+      ],
+    };
+  },
+  mounted() {
+    this.observeLazyImages();
+  },
+  methods: {
+    observeLazyImages() {
+      const options = {
+        root: null,
+        rootMargin: '10px',
+        threshold: 0.1,
+      };
+
+      let observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            let img = entry.target;
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+              observer.unobserve(img);
+            }
+          }
+        });
+      }, options);
+
+      this.$nextTick(() => {
+        const lazyImages = this.$refs.lazyImages;
+        lazyImages.forEach((img) => {
+          observer.observe(img);
+        });
+      });
+    },
+  },
+};
+</script>
+
+
+
+****************************** swipper ***************************************
+<template>
+  <div>
+    <h1>Swiper</h1>
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div v-for="(image, index) in images" :key="index" class="swiper-slide">
+          <img :data-src="image.src" :src="image.src"  :alt="image.alt" class="swiper-lazy" />
+          <div class="swiper-lazy-preloader"></div>
+        </div>
+      </div>
+      <!-- Swiper Pagination -->
+      <div class="swiper-pagination"></div>
+      <!-- Swiper Navigation -->
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import Swiper from 'swiper/bundle';
+import 'swiper/swiper-bundle.css';
+
+const images = ref([
+  {
+    src: 'https://img.freepik.com/free-photo/beautiful-scenery-summit-mount-everest-covered-with-snow-white-clouds_181624-21317.jpg?size=626&ext=jpg&234',
+    alt: 'Image 1',
+  },
+  {
+    src: 'https://img.freepik.com/free-photo/flag-india_1401-132.jpg?size=626&ext=jpg',
+    alt: 'Image 2',
+  },
+  {
+    src: 'https://img.freepik.com/free-vector/realistic-set-colorful-powder-clouds-explosions-isolated-transparent-background_1441-2628.jpg?size=626&ext=jpg',
+    alt: 'Image 3',
+  },
+  {
+    src: 'https://img.freepik.com/free-photo/flag-india_1401-132.jpg?size=626&ext=jpg',
+    alt: 'Image 4',
+  },
+  {
+    src: 'https://img.freepik.com/free-photo/flag-india_1401-132.jpg?size=626&ext=jpg',
+    alt: 'Image 5',
+  }
+]);
+
+onMounted(() => {
+  const swiper = new Swiper('.swiper-container', {
+    lazy: true,
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+});
+</script>
